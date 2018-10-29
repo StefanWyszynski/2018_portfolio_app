@@ -33,7 +33,6 @@ public class DataProcessingStateLoader extends DataProcessingState {
         } else {
             // file was downloadUserList recently so check if exists
             if (dataAvailableToLoad) {
-                // decode from blob to json and finally to DaysContainer
                 String json = dbDataHelper.convertUsersBlobToJSONString();
                 repository.setValue(new DownloadResult<>(UserList.fromJson(json), DownloadResult.ResultStatus.LOADED));
             } else {
