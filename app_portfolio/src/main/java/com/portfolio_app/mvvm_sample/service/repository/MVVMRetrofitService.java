@@ -8,7 +8,7 @@ import retrofit2.http.GET;
 /**
  * @author Stefan Wyszynski
  */
-public interface MVVMSampleRetrofitService {
+public interface MVVMRetrofitService {
     @GET("/api/users")
     Observable<UserList> getJsonForSelectedWeek();
 }

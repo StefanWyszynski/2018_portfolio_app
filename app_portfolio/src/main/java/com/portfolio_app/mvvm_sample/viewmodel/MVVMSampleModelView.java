@@ -5,17 +5,17 @@ import android.arch.lifecycle.ViewModel;
 
 import com.portfolio_app.base.DownloadResult;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
-import com.portfolio_app.mvvm_sample.service.repository.MVVMSampleRepository;
+import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
 
 /**
  * @author Stefan Wyszynski
  */
 public class MVVMSampleModelView extends ViewModel {
-    MVVMSampleRepository timelineRepository;
+    MVVMRepository timelineRepository;
 
     public LiveData<DownloadResult<UserList>> getWeekLiveData() {
         if (timelineRepository == null) {
-            timelineRepository = new MVVMSampleRepository();
+            timelineRepository = new MVVMRepository();
         }
         return timelineRepository.getLiveData();
     }

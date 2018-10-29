@@ -10,12 +10,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * @author Stefan Wyszynski
  */
-public class MVVMSampleRetrofit {
+public class MVVMRetrofit {
 
     public static final String HTTP_GAMESDEV_AYZ_PL = "https://reqres.in";
-    private final MVVMSampleRetrofitService service;
+    private final MVVMRetrofitService service;
 
-    public MVVMSampleRetrofit() {
+    public MVVMRetrofit() {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -30,10 +30,10 @@ public class MVVMSampleRetrofit {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        service = retrofit.create(MVVMSampleRetrofitService.class);
+        service = retrofit.create(MVVMRetrofitService.class);
     }
 
-    public MVVMSampleRetrofitService getService() {
+    public MVVMRetrofitService getService() {
         return service;
     }
 

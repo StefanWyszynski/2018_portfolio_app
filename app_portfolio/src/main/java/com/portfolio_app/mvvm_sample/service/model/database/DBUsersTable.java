@@ -19,7 +19,7 @@ public class DBUsersTable extends DBDAOTableBase {
     @DBColumn
     public DBFieldBlob userListJsonBlob;
 
-    private int waitTimeInMilisecounds = 1000 * 60;
+    private int waitTimeInMilisecounds = 1000 * 10;
 
     @Override
     public String getTableName() {
