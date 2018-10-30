@@ -43,14 +43,21 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.ViewHo
         Glide.with(context).load(user.avatar).into(holder.avatar);
     }
 
-    public void setUserList(List<UserInfo> userList) {
-        this.userList = userList;
-        notifyDataSetChanged();
+    public void setUserList(List<UserInfo> users) {
+        if (users != null) {
+            userList.clear();
+            userList.addAll(users);
+            notifyDataSetChanged();
+        }
     }
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        if (userList != null) {
+            return userList.size();
+        } else {
+            return 0;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

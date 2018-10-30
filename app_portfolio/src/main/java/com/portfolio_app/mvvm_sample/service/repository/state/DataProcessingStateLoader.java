@@ -15,7 +15,7 @@ public class DataProcessingStateLoader extends DataProcessingState {
 
     @Override
     public void execute() {
-        DataProcessingStateDownloader dataProcessingStateDownloader = new DataProcessingStateDownloader();
+        DataProcessingStateDownloader dataProcessingStateDownloader = new DataProcessingStateDownloader(repository);
 
         // if there is no file and this is current week then downloadUserList it
         DBUserListHelper dbDataHelper = repository.getDBUserListHelper();

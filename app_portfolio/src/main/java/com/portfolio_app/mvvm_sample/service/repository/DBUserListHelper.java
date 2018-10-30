@@ -7,7 +7,7 @@ import com.portfolio_app.mvvm_sample.service.model.database.DBUsersTable;
 import com.portfolio_app.services.ObjectsProvider;
 
 /**
- * Simple helper class to save/load UserList downloaded data to/from SQLlite database
+ * Simple helper class to save/load UserList to/from SQLlite database
  */
 public class DBUserListHelper {
     // 10 seconds - should be bigger but this is only for demonstration purposes

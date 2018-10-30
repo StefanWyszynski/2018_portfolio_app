@@ -1,6 +1,5 @@
 package com.portfolio_app.mvvm_sample.view.ui;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,15 +17,15 @@ import com.portfolio_app.base.PortfolioFragmentBase;
 import com.portfolio_app.mvvm_sample.service.model.UserInfo;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
 import com.portfolio_app.mvvm_sample.view.adapter.UserListAdapter;
-import com.portfolio_app.mvvm_sample.viewmodel.MVVMSampleModelView;
+import com.portfolio_app.mvvm_sample.viewmodel.MVVMModelView;
 
 import java.util.Arrays;
 
 /**
  * @author Stefan Wyszynski
  */
-public class MVVMSampleFragment extends PortfolioFragmentBase {
-    private MVVMSampleModelView mvvmSampleModelView;
+public class MVVMFragment extends PortfolioFragmentBase {
+    private MVVMModelView mvvmModelView;
     private LinearLayout progressConainer;
     private RecyclerView userList;
 
@@ -59,20 +58,17 @@ public class MVVMSampleFragment extends PortfolioFragmentBase {
     }
 
     private void bindViewModelData() {
-        mvvmSampleModelView = ViewModelProviders.of(this).get(MVVMSampleModelView.class);
-        mvvmSampleModelView.getWeekLiveData().observe(this, new Observer<DownloadResult<UserList>>() {
-            @Override
-            public void onChanged(@Nullable DownloadResult<UserList> downloadResult) {
-                hideProgressBar();
-                updateUserListDataAdapter(downloadResult);
-            }
+        mvvmModelView = ViewModelProviders.of(this).get(MVVMModelView.class);
+        mvvmModelView.getWeekLiveData().observe(this, downloadResult -> {
+            hideProgressBar();
+            updateUserListDataAdapter(downloadResult);
         });
         downloadUserListData();
     }
 
     public void downloadUserListData() {
         showProgressBar();
-        mvvmSampleModelView.downloadUserList();
+        mvvmModelView.downloadUserList();
     }
 
     @Override
@@ -94,8 +90,8 @@ public class MVVMSampleFragment extends PortfolioFragmentBase {
     }
 
     private void updateUserListDataAdapter(DownloadResult<UserList> downloadResult) {
-
-        if (downloadResult != null && downloadResult.result != null) {
+        if (downloadResult != null && downloadResult.result != null &&
+                downloadResult.status != DownloadResult.ResultStatus.NULL) {
             userListAdapter.setUserList(downloadResult.result.data);
         } else {
             UserInfo emptyUser = new UserInfo();

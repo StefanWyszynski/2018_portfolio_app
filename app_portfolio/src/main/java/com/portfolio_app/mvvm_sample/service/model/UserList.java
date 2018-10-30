@@ -15,8 +15,6 @@ public class UserList {
     public List<UserInfo> data;
 
     public static UserList fromJson(String json) {
-        Gson gson = new Gson();
-        UserList userList = gson.fromJson(json, UserList.class);
-        return userList;
+        return new Gson().fromJson(json, UserList.class);
     }
 }

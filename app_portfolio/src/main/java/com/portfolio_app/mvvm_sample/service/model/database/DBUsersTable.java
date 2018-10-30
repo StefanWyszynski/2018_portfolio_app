@@ -23,7 +23,7 @@ public class DBUsersTable extends DBDAOTableBase {
 
     @Override
     public String getTableName() {
-        return "users";
+        return "users_table";
     }
 
     /**

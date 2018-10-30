@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.portfolio_app.R;
+import com.portfolio_app.mvvm_sample.view.ui.MVVMFragment;
 
 /**
  * @author Stefan Wyszynski
@@ -14,6 +15,10 @@ public abstract class PortfolioActivtyBase extends AppCompatActivity {
 
     public void putFragment(Fragment fragment, boolean useBackStack) {
         putFragment(fragment, useBackStack, false, 0, 0);
+    }
+
+    public void putFragment(Fragment fragment) {
+        putFragment(fragment, false, true, R.anim.fade_in, R.anim.fade_out);
     }
 
     public void putFragment(Fragment fragment, boolean useBackStack, boolean useAnimation, int animationIn,

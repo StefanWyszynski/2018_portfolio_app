@@ -10,7 +10,7 @@ import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
 /**
  * @author Stefan Wyszynski
  */
-public class MVVMSampleModelView extends ViewModel {
+public class MVVMModelView extends ViewModel {
     MVVMRepository timelineRepository;
 
     public LiveData<DownloadResult<UserList>> getWeekLiveData() {

@@ -9,7 +9,7 @@ import com.portfolio_app.base.slidingmenu.BaseArrayItem;
 import com.portfolio_app.base.slidingmenu.BaseSlidingMenuActivity;
 import com.portfolio_app.base.slidingmenu.SlidingFileItem;
 import com.portfolio_app.base.slidingmenu.SlidingFilesAdapter;
-import com.portfolio_app.mvvm_sample.view.ui.MVVMSampleFragment;
+import com.portfolio_app.mvvm_sample.view.ui.MVVMFragment;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class MainActivity extends BaseSlidingMenuActivity {
     public static final int SLIDING_ITEM_ABOUT = 1;
-    public static final int SLIDING_ITEM_TIMELINE = 2;
+    public static final int SLIDING_ITEM_MVVM_SAMPLE = 2;
 
     @Override
     public int getActivityLayout() {
@@ -40,7 +40,7 @@ public class MainActivity extends BaseSlidingMenuActivity {
         ArrayList<BaseArrayItem> items = new ArrayList<>();
 
         addSlidingMenuItem(items, getString(R.string.fragment_mvvm_sample_title), R.drawable.ic_mvvm,
-                SLIDING_ITEM_TIMELINE);
+                SLIDING_ITEM_MVVM_SAMPLE);
 
         addSlidingMenuItem(items, getString(R.string.fragment_about_title), R.drawable.ic_about, SLIDING_ITEM_ABOUT);
         slidingFoldersAdapter.setItems(items);
@@ -60,10 +60,10 @@ public class MainActivity extends BaseSlidingMenuActivity {
         int itemId = (int) getSlidingMenuAdapter().getItemId(position);
         switch (itemId) {
             case SLIDING_ITEM_ABOUT:
-                putFragment(new AboutFragment(), false, true, R.anim.fade_in, R.anim.fade_out);
+                putFragment(new AboutFragment());
                 break;
-            case SLIDING_ITEM_TIMELINE:
-                putFragment(new MVVMSampleFragment(), false, true, R.anim.fade_in, R.anim.fade_out);
+            case SLIDING_ITEM_MVVM_SAMPLE:
+                putFragment(new MVVMFragment());
                 break;
 
             default:

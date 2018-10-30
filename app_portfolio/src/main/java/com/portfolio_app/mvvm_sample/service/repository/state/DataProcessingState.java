@@ -9,8 +9,5 @@ public abstract class DataProcessingState {
         this.repository = repository;
     }
 
-    public DataProcessingState() {
-    }
-
     public abstract void execute();
 }
