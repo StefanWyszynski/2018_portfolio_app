@@ -1,6 +1,10 @@
 package com.portfolio_app;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
+import android.support.test.espresso.IdlingResource;
 import android.view.View;
 import android.widget.AdapterView;
 
@@ -13,12 +17,31 @@ import com.portfolio_app.mvvm_sample.view.ui.MVVMFragment;
 
 import java.util.ArrayList;
 
-/**
+/*
+ * Copyright 2018, The Portfolio project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  * @author Stefan Wyszynski
+ *
  */
 public class MainActivity extends BaseSlidingMenuActivity {
     public static final int SLIDING_ITEM_ABOUT = 1;
     public static final int SLIDING_ITEM_MVVM_SAMPLE = 2;
+
+    // The Idling Resource which will be null in production.
+    @Nullable
+    private SimpleIdlingResource mIdlingResource;
 
     @Override
     public int getActivityLayout() {
@@ -70,5 +93,17 @@ public class MainActivity extends BaseSlidingMenuActivity {
                 break;
         }
         closeSlidingMenu();
+    }
+
+    /**
+     * Only called from test, creates and returns a new {@link SimpleIdlingResource}.
+     */
+    @VisibleForTesting
+    @NonNull
+    public IdlingResource getIdlingResource() {
+        if (mIdlingResource == null) {
+            mIdlingResource = new SimpleIdlingResource();
+        }
+        return mIdlingResource;
     }
 }

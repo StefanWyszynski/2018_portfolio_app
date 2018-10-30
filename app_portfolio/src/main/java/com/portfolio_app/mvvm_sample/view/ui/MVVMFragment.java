@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.portfolio_app.R;
+import com.portfolio_app.SimpleIdlingResource;
 import com.portfolio_app.base.DownloadResult;
 import com.portfolio_app.base.PortfolioFragmentBase;
 import com.portfolio_app.mvvm_sample.service.model.UserInfo;
@@ -21,8 +22,23 @@ import com.portfolio_app.mvvm_sample.viewmodel.MVVMModelView;
 
 import java.util.Arrays;
 
-/**
+/*
+ * Copyright 2018, The Portfolio project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
  * @author Stefan Wyszynski
+ *
  */
 public class MVVMFragment extends PortfolioFragmentBase {
     private MVVMModelView mvvmModelView;
@@ -62,13 +78,23 @@ public class MVVMFragment extends PortfolioFragmentBase {
         mvvmModelView.getWeekLiveData().observe(this, downloadResult -> {
             hideProgressBar();
             updateUserListDataAdapter(downloadResult);
+
+            // The IdlingResource is null in production.
+            SimpleIdlingResource idlingResource = (SimpleIdlingResource)getMainActivity().getIdlingResource();
+            if (idlingResource != null) {
+                idlingResource.setIdleState(true);
+            }
         });
         downloadUserListData();
     }
 
     public void downloadUserListData() {
         showProgressBar();
-        mvvmModelView.downloadUserList();
+        SimpleIdlingResource idlingResource = (SimpleIdlingResource)getMainActivity().getIdlingResource();
+        if (idlingResource != null) {
+            idlingResource.setIdleState(false);
+        }
+        mvvmModelView.downloadUserList();// The IdlingResource is null in production.
     }
 
     @Override
