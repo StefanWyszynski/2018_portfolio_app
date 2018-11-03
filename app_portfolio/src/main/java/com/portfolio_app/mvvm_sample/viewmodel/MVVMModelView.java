@@ -4,8 +4,11 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.portfolio_app.base.DownloadResult;
+import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
 import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
+
+import javax.inject.Inject;
 
 /*
  * Copyright 2018, The Portfolio project
@@ -28,15 +31,17 @@ import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
 public class MVVMModelView extends ViewModel {
     MVVMRepository timelineRepository;
 
+    @Inject
+    public MVVMModelView(MVVMRepository timelineRepository) {
+        this.timelineRepository = timelineRepository;
+    }
+
     public LiveData<DownloadResult<UserList>> getWeekLiveData() {
-        if (timelineRepository == null) {
-            timelineRepository = new MVVMRepository();
-        }
         return timelineRepository.getLiveData();
     }
 
-    public void downloadUserList() {
-        timelineRepository.downloadUserList();
+    public void downloadUserList(MVVMFragmentComponent mvvmFragmentComponent) {
+        timelineRepository.downloadUserList(mvvmFragmentComponent);
     }
 
     @Override

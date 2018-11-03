@@ -26,7 +26,19 @@ public class DownloadResult<R> {
         this.status = status;
     }
 
+    public static <R> DownloadResult success(R resultObject) {
+        return new DownloadResult<>(resultObject, ResultStatus.SUCCESS);
+    }
+
+    public static <R> DownloadResult failure() {
+        return new DownloadResult<>(null, ResultStatus.FAILURE);
+    }
+
+    public static <R> DownloadResult loaded(R resultObject) {
+        return new DownloadResult<>(resultObject, ResultStatus.LOADED);
+    }
+
     public enum ResultStatus {
-        DOWNLOADED, LOADED, NULL
+        SUCCESS, LOADED, FAILURE
     }
 }

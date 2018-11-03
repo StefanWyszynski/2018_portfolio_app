@@ -4,7 +4,8 @@ import com.google.gson.Gson;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
 import com.portfolio_app.mvvm_sample.service.model.database.DBUsersManager;
 import com.portfolio_app.mvvm_sample.service.model.database.DBUsersTable;
-import com.portfolio_app.services.ObjectsProvider;
+
+import javax.inject.Inject;
 /*
  * Copyright 2018, The Portfolio project
  *
@@ -23,6 +24,7 @@ import com.portfolio_app.services.ObjectsProvider;
  * @author Stefan Wyszynski
  *
  */
+
 /**
  * Simple helper class to save/load UserList to/from SQLlite database
  */
@@ -33,8 +35,9 @@ public class DBUserListHelper {
     private DBUsersManager dbUsersManager;
     private DBUsersTable dbUsersTable;
 
-    public DBUserListHelper() {
-        dbUsersManager = ObjectsProvider.getInstance().get(DBUsersManager.class);
+    @Inject
+    public DBUserListHelper(DBUsersManager dbUsersManager) {
+        this.dbUsersManager = dbUsersManager;
         dbUsersTable = dbUsersManager.getSetting(USERS_DB_ID);
     }
 

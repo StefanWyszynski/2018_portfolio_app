@@ -1,5 +1,6 @@
 package com.portfolio_app.mvvm_sample.service.repository.state;
 
+import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
 import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
 
 /*
@@ -26,5 +27,5 @@ public abstract class DataProcessingState {
         this.repository = repository;
     }
 
-    public abstract void execute();
+    public abstract void execute(MVVMFragmentComponent mvvmFragmentComponent);
 }

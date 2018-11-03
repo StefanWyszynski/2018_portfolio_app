@@ -4,8 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
-import com.portfolio_app.mvvm_sample.service.model.database.DBUsersManager;
-import com.portfolio_app.services.ObjectsProvider;
+import com.portfolio_app.mvvm_sample.di.ApplicationComponent;
+import com.portfolio_app.mvvm_sample.di.ApplicationModule;
+import com.portfolio_app.mvvm_sample.di.DaggerApplicationComponent;
 
 /*
  * Copyright 2018, The Portfolio project
@@ -27,20 +28,22 @@ import com.portfolio_app.services.ObjectsProvider;
  */
 public class PortfolioApp extends Application {
 
+    private static ApplicationComponent appComponent;
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
 
+    public static ApplicationComponent getAppComponent() {
+        return appComponent;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        registerDBUsersManager();
-    }
-
-    private void registerDBUsersManager() {
-        DBUsersManager dbUsersManager = new DBUsersManager(getApplicationContext());
-        ObjectsProvider.getInstance().registerObject(DBUsersManager.class, dbUsersManager);
+        appComponent =
+                DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
     }
 }

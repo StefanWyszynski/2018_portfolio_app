@@ -11,9 +11,6 @@ import android.view.MenuInflater;
 import com.portfolio_app.MainActivity;
 import com.portfolio_app.R;
 import com.portfolio_app.base.utils.UtilsForString;
-import com.portfolio_app.mvvm_sample.service.model.database.DBUsersManager;
-import com.portfolio_app.mvvm_sample.service.model.database.DBUsersTable;
-import com.portfolio_app.services.ObjectsProvider;
 
 /*
  * Copyright 2018, The Portfolio project
@@ -66,14 +63,5 @@ public abstract class PortfolioFragmentBase extends Fragment {
             return (MainActivity) activity;
         }
         return null;
-    }
-
-    public DBUsersTable getDBUsersTable() {
-        DBUsersManager dbUsersManager = ObjectsProvider.getInstance().get(DBUsersManager.class);
-        if (dbUsersManager != null) {
-            return dbUsersManager.getSetting(getClass().getSimpleName());
-        } else {
-            return null;
-        }
     }
 }

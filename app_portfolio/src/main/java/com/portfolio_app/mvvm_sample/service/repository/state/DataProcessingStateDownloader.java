@@ -1,9 +1,11 @@
 package com.portfolio_app.mvvm_sample.service.repository.state;
 
 import com.portfolio_app.base.DownloadResult;
+import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
 import com.portfolio_app.mvvm_sample.service.repository.DBUserListHelper;
 import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
+import com.portfolio_app.mvvm_sample.service.repository.MVVMRetrofitService;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -39,26 +41,29 @@ public class DataProcessingStateDownloader extends DataProcessingState {
     }
 
     @Override
-    public void execute() {
+    public void execute(MVVMFragmentComponent mvvmFragmentComponent) {
         repository.disposeDownload();
+//        mvvmFragmentComponent.getRetrofitService().
+//        MVVMRetrofitService retrofitService = repository.getRetrofitDownloader().getService();
 
-        Observable<UserList> jsonForSelectedWeek =
-                repository.getRetrofitDownloader().getService().getJsonForSelectedWeek();
-        DBUserListHelper dbDataHelper = repository.getDBUserListHelper();
-        repository.setDownloadDisposable(jsonForSelectedWeek
+        MVVMRetrofitService retrofitService = mvvmFragmentComponent.getRetrofitService();
+
+        Observable<UserList> users = retrofitService.getUsers();
+        DBUserListHelper dbDataHelper = repository.getDbUserListHelper();
+
+        repository.addDisposable(users
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userList -> {
                     dbDataHelper.saveDownloadedUsersToDB(userList);
-                    repository.setValue(new DownloadResult<>(userList, DownloadResult.ResultStatus.DOWNLOADED));
+                    repository.setValue(DownloadResult.success(userList));
                 }, throwable -> {
                     // we couldn't load the data so let's try to load file
                     if (dbDataHelper.isDataAvailableToLoad()) {
                         String json = dbDataHelper.convertUsersBlobToJSONString();
-                        repository.setValue(new DownloadResult<>(UserList.fromJson(json),
-                                DownloadResult.ResultStatus.LOADED));
+                        repository.setValue(DownloadResult.loaded(UserList.fromJson(json)));
                     } else {
-                        repository.setValue(new DownloadResult<>(null, DownloadResult.ResultStatus.NULL));
+                        repository.setValue(DownloadResult.failure());
                     }
                     throwable.printStackTrace();
                 }));

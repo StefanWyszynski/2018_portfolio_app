@@ -1,12 +1,14 @@
 package com.portfolio_app.mvvm_sample.service.model.database;
 
-import android.content.Context;
+import android.app.Application;
 
 import com.simple.sqldatabase.DBFieldRegistry;
 import com.simple.sqldatabase.DBManager;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 
 /*
@@ -31,10 +33,11 @@ public class DBUsersManager {
     DBManager database;
     private Map<String, DBUsersTable> webPageHolders;
 
-    public DBUsersManager(Context context) {
+    @Inject
+    public DBUsersManager(Application application) {
         webPageHolders = new HashMap<>();
         String name = getClass().getName();
-        database = new DBManager(context, name, DBUsersTable.class);
+        database = new DBManager(application, name, DBUsersTable.class);
     }
 
     private void registerSetting(String key) {
@@ -58,7 +61,7 @@ public class DBUsersManager {
         DBUsersTable setting = webPageHolders.get(key);
         database.get(setting, setting.id);
 //        List<DBDAOTableBase> sll = setting.getAllRows(database);
-//        setting.getJsonForSelectedWeek(database, setting.id);
+//        setting.getUsers(database, setting.id);
         return setting;
     }
 

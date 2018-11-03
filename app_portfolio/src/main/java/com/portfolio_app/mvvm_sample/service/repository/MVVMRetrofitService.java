@@ -25,5 +25,5 @@ import retrofit2.http.GET;
  */
 public interface MVVMRetrofitService {
     @GET("/api/users")
-    Observable<UserList> getJsonForSelectedWeek();
+    Observable<UserList> getUsers();
 }

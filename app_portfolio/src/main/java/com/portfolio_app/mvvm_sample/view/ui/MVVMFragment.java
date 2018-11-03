@@ -11,16 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.portfolio_app.PortfolioApp;
 import com.portfolio_app.R;
 import com.portfolio_app.SimpleIdlingResource;
 import com.portfolio_app.base.DownloadResult;
 import com.portfolio_app.base.PortfolioFragmentBase;
+import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
 import com.portfolio_app.mvvm_sample.service.model.UserInfo;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
 import com.portfolio_app.mvvm_sample.view.adapter.UserListAdapter;
 import com.portfolio_app.mvvm_sample.viewmodel.MVVMModelView;
+import com.portfolio_app.mvvm_sample.viewmodel.MVVMModelViewFactory;
 
 import java.util.Arrays;
+
+import javax.inject.Inject;
 
 /*
  * Copyright 2018, The Portfolio project
@@ -41,11 +46,20 @@ import java.util.Arrays;
  *
  */
 public class MVVMFragment extends PortfolioFragmentBase {
+    @Inject
+    MVVMModelViewFactory mvvmModelViewFactory;
     private MVVMModelView mvvmModelView;
+    private MVVMFragmentComponent mvvmFragmentComponent;
+
     private LinearLayout progressConainer;
     private RecyclerView userList;
-
     private UserListAdapter userListAdapter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        injectFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,6 +76,14 @@ public class MVVMFragment extends PortfolioFragmentBase {
         userList.setLayoutManager(new LinearLayoutManager(getContext()));
         userListAdapter = new UserListAdapter(getContext());
         userList.setAdapter(userListAdapter);
+
+    }
+
+    private void injectFragment() {
+        if (mvvmFragmentComponent == null) {
+            mvvmFragmentComponent = PortfolioApp.getAppComponent().mvvmFragmentComponentBuilder().build();
+            mvvmFragmentComponent.inject(this);
+        }
     }
 
     @Override
@@ -73,28 +95,29 @@ public class MVVMFragment extends PortfolioFragmentBase {
         updateUserListDataAdapter(null);
     }
 
+
     private void bindViewModelData() {
-        mvvmModelView = ViewModelProviders.of(this).get(MVVMModelView.class);
+        mvvmModelView = ViewModelProviders.of(this, mvvmModelViewFactory).get(MVVMModelView.class);
         mvvmModelView.getWeekLiveData().observe(this, downloadResult -> {
             hideProgressBar();
             updateUserListDataAdapter(downloadResult);
 
-            // The IdlingResource is null in production.
-            SimpleIdlingResource idlingResource = (SimpleIdlingResource)getMainActivity().getIdlingResource();
-            if (idlingResource != null) {
-                idlingResource.setIdleState(true);
-            }
+            setItleState(true);
         });
         downloadUserListData();
     }
 
     public void downloadUserListData() {
         showProgressBar();
-        SimpleIdlingResource idlingResource = (SimpleIdlingResource)getMainActivity().getIdlingResource();
+        setItleState(false);
+        mvvmModelView.downloadUserList(mvvmFragmentComponent);
+    }
+
+    private void setItleState(boolean b) {
+        SimpleIdlingResource idlingResource = (SimpleIdlingResource) getMainActivity().getIdlingResource();
         if (idlingResource != null) {
-            idlingResource.setIdleState(false);
+            idlingResource.setIdleState(b);
         }
-        mvvmModelView.downloadUserList();// The IdlingResource is null in production.
     }
 
     @Override
@@ -102,9 +125,8 @@ public class MVVMFragment extends PortfolioFragmentBase {
         if (item.getItemId() == R.id.menu_item_refresh) {
             downloadUserListData();
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showProgressBar() {
@@ -117,7 +139,7 @@ public class MVVMFragment extends PortfolioFragmentBase {
 
     private void updateUserListDataAdapter(DownloadResult<UserList> downloadResult) {
         if (downloadResult != null && downloadResult.result != null &&
-                downloadResult.status != DownloadResult.ResultStatus.NULL) {
+                downloadResult.status != DownloadResult.ResultStatus.FAILURE) {
             userListAdapter.setUserList(downloadResult.result.data);
         } else {
             UserInfo emptyUser = new UserInfo();

@@ -1,8 +1,12 @@
 package com.portfolio_app.mvvm_sample.service.repository;
 
 import com.portfolio_app.base.PortfolioRepositoryBase;
+import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
 import com.portfolio_app.mvvm_sample.service.repository.state.DataProcessingStateLoader;
 
+import javax.inject.Inject;
+
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 /*
@@ -25,35 +29,27 @@ import io.reactivex.disposables.Disposable;
  */
 public class MVVMRepository extends PortfolioRepositoryBase {
 
-    protected Disposable downloadDisposable;
-    private DBUserListHelper DBUserListHelper;
-    private MVVMRetrofit retrofitDownloader;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+    private DBUserListHelper dbUserListHelper;
 
-    public MVVMRepository() {
-        retrofitDownloader = new MVVMRetrofit();
-        DBUserListHelper = new DBUserListHelper();
+    @Inject
+    public MVVMRepository(DBUserListHelper dbUserListHelper) {
+        this.dbUserListHelper = dbUserListHelper;
     }
 
-    public DBUserListHelper getDBUserListHelper() {
-        return DBUserListHelper;
+    public DBUserListHelper getDbUserListHelper() {
+        return dbUserListHelper;
     }
 
-    public MVVMRetrofit getRetrofitDownloader() {
-        return retrofitDownloader;
+    public void downloadUserList(MVVMFragmentComponent mvvmFragmentComponent) {
+        new DataProcessingStateLoader(this).execute(mvvmFragmentComponent);
     }
 
-    public void downloadUserList() {
-        new DataProcessingStateLoader(this).execute();
+    public void addDisposable(Disposable disposable) {
+        disposables.add(disposable);
     }
 
     public void disposeDownload() {
-        if (downloadDisposable != null && !downloadDisposable.isDisposed()) {
-            downloadDisposable.dispose();
-        }
-    }
-
-    public void setDownloadDisposable(Disposable subscribe) {
-        disposeDownload();
-        downloadDisposable = subscribe;
+        disposables.clear();
     }
 }
