@@ -11,21 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.portfolio_app.PortfolioApp;
 import com.portfolio_app.R;
 import com.portfolio_app.SimpleIdlingResource;
 import com.portfolio_app.base.DownloadResult;
 import com.portfolio_app.base.PortfolioFragmentBase;
-import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
 import com.portfolio_app.mvvm_sample.service.model.UserInfo;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
 import com.portfolio_app.mvvm_sample.view.adapter.UserListAdapter;
-import com.portfolio_app.mvvm_sample.viewmodel.MVVMModelView;
-import com.portfolio_app.mvvm_sample.viewmodel.MVVMModelViewFactory;
+import com.portfolio_app.mvvm_sample.viewmodel.MVVMViewModel;
 
 import java.util.Arrays;
-
-import javax.inject.Inject;
 
 /*
  * Copyright 2018, The Portfolio project
@@ -46,10 +41,7 @@ import javax.inject.Inject;
  *
  */
 public class MVVMFragment extends PortfolioFragmentBase {
-    @Inject
-    MVVMModelViewFactory mvvmModelViewFactory;
-    private MVVMModelView mvvmModelView;
-    private MVVMFragmentComponent mvvmFragmentComponent;
+    private MVVMViewModel mvvmViewModel;
 
     private LinearLayout progressConainer;
     private RecyclerView userList;
@@ -58,7 +50,6 @@ public class MVVMFragment extends PortfolioFragmentBase {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        injectFragment();
     }
 
     @Override
@@ -76,14 +67,6 @@ public class MVVMFragment extends PortfolioFragmentBase {
         userList.setLayoutManager(new LinearLayoutManager(getContext()));
         userListAdapter = new UserListAdapter(getContext());
         userList.setAdapter(userListAdapter);
-
-    }
-
-    private void injectFragment() {
-        if (mvvmFragmentComponent == null) {
-            mvvmFragmentComponent = PortfolioApp.getAppComponent().mvvmFragmentComponentBuilder().build();
-            mvvmFragmentComponent.inject(this);
-        }
     }
 
     @Override
@@ -97,8 +80,8 @@ public class MVVMFragment extends PortfolioFragmentBase {
 
 
     private void bindViewModelData() {
-        mvvmModelView = ViewModelProviders.of(this, mvvmModelViewFactory).get(MVVMModelView.class);
-        mvvmModelView.getWeekLiveData().observe(this, downloadResult -> {
+        mvvmViewModel = ViewModelProviders.of(this).get(MVVMViewModel.class);
+        mvvmViewModel.getWeekLiveData().observe(this, downloadResult -> {
             hideProgressBar();
             updateUserListDataAdapter(downloadResult);
 
@@ -110,7 +93,7 @@ public class MVVMFragment extends PortfolioFragmentBase {
     public void downloadUserListData() {
         showProgressBar();
         setItleState(false);
-        mvvmModelView.downloadUserList(mvvmFragmentComponent);
+        mvvmViewModel.downloadUserList();
     }
 
     private void setItleState(boolean b) {

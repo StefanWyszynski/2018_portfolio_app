@@ -3,6 +3,7 @@ package com.portfolio_app.mvvm_sample.viewmodel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModel;
 
+import com.portfolio_app.PortfolioApp;
 import com.portfolio_app.base.DownloadResult;
 import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
 import com.portfolio_app.mvvm_sample.service.model.UserList;
@@ -28,19 +29,29 @@ import javax.inject.Inject;
  * @author Stefan Wyszynski
  *
  */
-public class MVVMModelView extends ViewModel {
-    MVVMRepository timelineRepository;
+public class MVVMViewModel extends ViewModel {
 
     @Inject
-    public MVVMModelView(MVVMRepository timelineRepository) {
-        this.timelineRepository = timelineRepository;
+    MVVMRepository timelineRepository;
+
+    private MVVMFragmentComponent mvvmFragmentComponent;
+
+    public MVVMViewModel() {
+        injectComponent();
+    }
+
+    private void injectComponent() {
+        if (mvvmFragmentComponent == null) {
+            mvvmFragmentComponent = PortfolioApp.getAppComponent().mvvmFragmentComponentBuilder().build();
+            mvvmFragmentComponent.inject(this);
+        }
     }
 
     public LiveData<DownloadResult<UserList>> getWeekLiveData() {
         return timelineRepository.getLiveData();
     }
 
-    public void downloadUserList(MVVMFragmentComponent mvvmFragmentComponent) {
+    public void downloadUserList() {
         timelineRepository.downloadUserList(mvvmFragmentComponent);
     }
 
