@@ -5,7 +5,7 @@ import com.portfolio_app.mvvm_sample.viewmodel.MVVMViewModel;
 
 import dagger.Subcomponent;
 
-@Subcomponent(modules = {MVVMFragmentRetrofitModule.class})
+@Subcomponent(modules = {MVVMFragmentRetrofitModule.class, MVVMFragmentDBModule.class})
 @MVVMFragmentScope
 public interface MVVMFragmentComponent {
 
@@ -16,6 +16,7 @@ public interface MVVMFragmentComponent {
     @Subcomponent.Builder
     interface Builder {
         MVVMFragmentComponent.Builder mvvmFragmentRetrofitModule(MVVMFragmentRetrofitModule mvvmFragmentRetrofitModule);
+
         MVVMFragmentComponent build();
     }
 }

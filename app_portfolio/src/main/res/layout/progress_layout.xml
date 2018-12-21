@@ -7,20 +7,20 @@
         android:id="@+id/progressHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         android:background="@android:color/transparent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <TextView
             android:id="@+id/progressText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="serif"
             android:gravity="center"
             android:padding="1dp"
             android:text="Pobieranie adresu"
             android:textColor="@color/gray_2"
-            android:textSize="12dp"
-            android:fontFamily="serif"/>
+            android:textSize="12dp"/>
 
         <ProgressBar
             android:id="@+id/progressbar"

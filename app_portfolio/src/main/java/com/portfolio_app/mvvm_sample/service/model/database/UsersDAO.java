@@ -1,7 +1,12 @@
-package com.portfolio_app.mvvm_sample.service.repository.state;
+package com.portfolio_app.mvvm_sample.service.model.database;
 
-import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
-import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.Query;
+
+import java.util.List;
+
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 
 /*
  * Copyright 2018, The Portfolio project
@@ -20,12 +25,18 @@ import com.portfolio_app.mvvm_sample.service.repository.MVVMRepository;
  *
  * @author Stefan Wyszynski
  */
-public abstract class DataProcessingState {
-    protected MVVMRepository repository;
+@Dao
+public interface UsersDAO {
 
-    public DataProcessingState(MVVMRepository repository) {
-        this.repository = repository;
-    }
+    @Insert(onConflict = REPLACE)
+    void insert(Users users);
 
-    public abstract void execute(MVVMFragmentComponent mvvmFragmentComponent);
+    @Query("DELETE FROM Users")
+    void deleteAll();
+
+    @Query("SELECT * from Users ORDER BY id ASC")
+    List<Users> getAll();
+
+    @Query("SELECT * from Users WHERE id = :usersID")
+    Users get(String usersID);
 }

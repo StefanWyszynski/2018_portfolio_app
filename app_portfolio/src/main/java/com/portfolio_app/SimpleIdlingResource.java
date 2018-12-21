@@ -8,7 +8,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
  * copied from:
- * https://github.com/googlesamples/android-testing/blob/master/ui/espresso/IdlingResourceSample/app/src/main/java/com/example/android/testing/espresso/IdlingResourceSample/IdlingResource/SimpleIdlingResource.java
+ * https://github.com/googlesamples/android-testing/blob/master/ui/espresso/IdlingResourceSample/app/src/main/java
+ * /com/example/android/testing/espresso/IdlingResourceSample/IdlingResource/SimpleIdlingResource.java
  */
 
 /**
@@ -42,6 +43,7 @@ public class SimpleIdlingResource implements IdlingResource {
 
     /**
      * Sets the new idle state, if isIdleNow is true, it pings the {@link ResourceCallback}.
+     *
      * @param isIdleNow false if there are pending operations, true if idle.
      */
     public void setIdleState(boolean isIdleNow) {

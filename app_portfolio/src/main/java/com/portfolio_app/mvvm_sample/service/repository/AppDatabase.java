@@ -1,10 +1,10 @@
 package com.portfolio_app.mvvm_sample.service.repository;
 
-import com.portfolio_app.mvvm_sample.service.model.UserList;
+import android.arch.persistence.room.Database;
+import android.arch.persistence.room.RoomDatabase;
 
-import io.reactivex.Single;
-import retrofit2.http.GET;
-
+import com.portfolio_app.mvvm_sample.service.model.database.Users;
+import com.portfolio_app.mvvm_sample.service.model.database.UsersDAO;
 /*
  * Copyright 2018, The Portfolio project
  *
@@ -23,7 +23,12 @@ import retrofit2.http.GET;
  * @author Stefan Wyszynski
  *
  */
-public interface MVVMRetrofitService {
-    @GET("/api/users")
-    Single<UserList> getUsers();
+
+/**
+ * Simple helper class to save/load UserList to/from SQLlite database
+ */
+@Database(entities = {Users.class}, version = 1)
+public abstract class AppDatabase extends RoomDatabase {
+
+    public abstract UsersDAO userModel();
 }

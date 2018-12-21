@@ -1,11 +1,11 @@
 package com.portfolio_app.mvvm_sample.service.model.database;
 
-import com.simple.sqldatabase.DBDAOTableBase;
-import com.simple.sqldatabase.annotations.DBColumn;
-import com.simple.sqldatabase.fields.DBBlobType;
-import com.simple.sqldatabase.fields.DBFieldBlob;
-import com.simple.sqldatabase.fields.DBFieldLong;
-import com.simple.sqldatabase.fields.DBFieldString;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 
 /*
  * Copyright 2018, The Portfolio project
@@ -24,21 +24,21 @@ import com.simple.sqldatabase.fields.DBFieldString;
  *
  * @author Stefan Wyszynski
  */
-public class DBUsersTable extends DBDAOTableBase {
+@Entity
+public class Users {
 
-    @DBColumn(primaryKey = true, autoIncrement = false)
-    public DBFieldString id;
-    @DBColumn
-    public DBFieldLong downloadTime;
-    @DBColumn
-    public DBFieldBlob userListJsonBlob;
+    @PrimaryKey
+    @NonNull
+    public String id;
 
-    private int waitTimeInMilisecounds = 1000 * 10;
+    @ColumnInfo
+    public Long downloadTime;
 
-    @Override
-    public String getTableName() {
-        return "users_table";
-    }
+    @ColumnInfo
+    public byte[] userListJsonBlob;
+
+    @Ignore
+    private int waitTimeInMilisecounds = 1000 * 60;
 
     /**
      * specify how long you will have to wait to allow re-downloading the data
@@ -50,7 +50,7 @@ public class DBUsersTable extends DBDAOTableBase {
     }
 
     public boolean needToBeDownloaded() {
-        Long date = downloadTime.get();
+        Long date = downloadTime;
         if (date == null || date == 0L) {
             return true;
         }
@@ -58,11 +58,9 @@ public class DBUsersTable extends DBDAOTableBase {
     }
 
     public void putInfo(String primary_key, byte[] bytes) {
-        id.set(primary_key);
-        downloadTime.set(System.currentTimeMillis());
-        DBBlobType value = new DBBlobType();
-        value.bytes = bytes;
-        userListJsonBlob.set(value);
+        id = primary_key;
+        downloadTime = System.currentTimeMillis();
+        userListJsonBlob = bytes;
     }
 
     public byte[] convertToBlob(String str) {
@@ -73,12 +71,12 @@ public class DBUsersTable extends DBDAOTableBase {
         if (!blobExists()) {
             return null;
         }
-        return new String(userListJsonBlob.get().bytes);
+        return new String(userListJsonBlob);
     }
 
     public boolean blobExists() {
-        byte[] bytes = userListJsonBlob.get().bytes;
-        if (bytes != null && bytes.length > 40) {
+        byte[] bytes = userListJsonBlob;
+        if (bytes != null && bytes.length > 20) {
             return true;
         }
         return false;

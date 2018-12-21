@@ -30,14 +30,14 @@ public class PortfolioApp extends Application {
 
     private static ApplicationComponent appComponent;
 
+    public static ApplicationComponent getAppComponent() {
+        return appComponent;
+    }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
-    }
-
-    public static ApplicationComponent getAppComponent() {
-        return appComponent;
     }
 
     @Override
@@ -45,5 +45,8 @@ public class PortfolioApp extends Application {
         super.onCreate();
         appComponent =
                 DaggerApplicationComponent.builder().applicationModule(new ApplicationModule(this)).build();
+
     }
+
+
 }

@@ -1,13 +1,21 @@
 package com.portfolio_app.mvvm_sample.service.repository;
 
+import com.portfolio_app.base.DownloadResult;
 import com.portfolio_app.base.PortfolioRepositoryBase;
 import com.portfolio_app.mvvm_sample.di.MVVMFragmentComponent;
-import com.portfolio_app.mvvm_sample.service.repository.state.DataProcessingStateLoader;
+import com.portfolio_app.mvvm_sample.service.model.UserList;
 
 import javax.inject.Inject;
 
+import io.reactivex.Flowable;
+import io.reactivex.Maybe;
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Single;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 /*
  * Copyright 2018, The Portfolio project
@@ -30,19 +38,34 @@ import io.reactivex.disposables.Disposable;
 public class MVVMRepository extends PortfolioRepositoryBase {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
-    private DBUserListHelper dbUserListHelper;
+
+    public IDBUsersHelper dbHelper;
 
     @Inject
-    public MVVMRepository(DBUserListHelper dbUserListHelper) {
-        this.dbUserListHelper = dbUserListHelper;
-    }
-
-    public DBUserListHelper getDbUserListHelper() {
-        return dbUserListHelper;
+    public MVVMRepository(IDBUsersHelper dbHelper) {
+        this.dbHelper = dbHelper;
     }
 
     public void downloadUserList(MVVMFragmentComponent mvvmFragmentComponent) {
-        new DataProcessingStateLoader(this).execute(mvvmFragmentComponent);
+
+        disposeDownload();
+
+        MVVMRetrofitService retrofitService = mvvmFragmentComponent.getRetrofitService();
+        Single<UserList> retrofitServiceUsers = retrofitService.getUsers();
+
+        Flowable<Object> concat = Maybe.concat(dbHelper.tryLoadUsersFromSQLDB(), retrofitServiceUsers.toMaybe());
+        Disposable disposable = concat
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .firstElement()
+                .subscribe(userList -> {
+                    dbHelper.saveUsersToSQLDB((UserList) userList);
+                    setValue(DownloadResult.success(userList));
+                }, throwable -> {
+                    setValue(DownloadResult.failure());
+                    throwable.printStackTrace();
+                });
+        addDisposable(disposable);
     }
 
     public void addDisposable(Disposable disposable) {
@@ -50,6 +73,8 @@ public class MVVMRepository extends PortfolioRepositoryBase {
     }
 
     public void disposeDownload() {
+
         disposables.clear();
     }
+
 }

@@ -10,8 +10,8 @@
     <FrameLayout
         android:id="@+id/frame_content0"
         android:layout_width="match_parent"
-        android:background="@drawable/app_background"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/app_background">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,15 +31,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:background="@android:color/transparent"
+            android:orientation="vertical"
             android:paddingTop="?android:attr/actionBarSize">
 
             <FrameLayout
-                android:background="@android:color/transparent"
                 android:id="@+id/fragment_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"/>
         </LinearLayout>
     </FrameLayout>
 

@@ -78,7 +78,6 @@ public class MVVMFragment extends PortfolioFragmentBase {
         updateUserListDataAdapter(null);
     }
 
-
     private void bindViewModelData() {
         mvvmViewModel = ViewModelProviders.of(this).get(MVVMViewModel.class);
         mvvmViewModel.getWeekLiveData().observe(this, downloadResult -> {
