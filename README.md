@@ -1,4 +1,15 @@
 # This is my sample code for presentation purposes
+Technology stack:
+- Room for database
+- Dagger2 dependency injection
+- rxJava/rxAndroid
+- okHttp3
+- retrofit
+- GSon for json
+- ViewModel
+- LiveData
+- glide for image loading
+- 
 
 TODO add unit tests
 
